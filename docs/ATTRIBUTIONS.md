@@ -24,6 +24,7 @@ Note on the ALIKED / LightGlue ONNX files: the repository hosting the exports ca
 | What | License | Why rejected |
 |---|---|---|
 | Ultralytics YOLOv8 / YOLO11 (code and weights) | AGPL-3.0 | Not MIT-compatible. Replaced by LRASPP-MobileNetV3 (see `DECISIONS.md` D006). |
+| Indian Roads semantic segmentation dataset (e-Yantra) | GPL 2.0 | GPL family. |
 
 ## Test assets
 | File | Source | License |
@@ -32,4 +33,8 @@ Note on the ALIKED / LightGlue ONNX files: the repository hosting the exports ca
 | `tests/fixtures/astronaut.png` | NASA photo of Eileen Collins, distributed with scikit-image | Public domain (NASA) |
 
 ## Datasets
-See `eval/datasets.md`.
+| Dataset | Source | License | Used for |
+|---|---|---|---|
+| Cracks and Potholes in Road Images (CPRID) | Passos et al., Mendeley Data, doi:10.17632/t576ydh9v8.4; images supplied by DNIT (Brazil) | CC BY 4.0 | Segmenter training and public benchmark |
+
+Rejected datasets and the reasons are listed in `eval/datasets.md`.
