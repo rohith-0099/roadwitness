@@ -34,3 +34,12 @@ PaliGemma2 ONNX is about 12 GB fp32 and could not be tested yet. The policy gate
 
 ## D011 — Test images must have clear rights
 `lena.png` was removed. Fixtures: OpenCV's own `box.png` / `box_in_scene.png` (Apache-2.0 test data) and NASA's public-domain astronaut photo (via scikit-image).
+
+## D012 — Training data: CPRID, split by highway; Roboflow pothole set rejected
+`manot/pothole-segmentation` was downloaded, inspected and deleted: it contains Alamy-watermarked stock photos and TV-news screenshots (the uploader's CC BY 4.0 label cannot cover them), and its published splits leak (63 of 72 test sources also in train). The competition's pass/fail rules forbid data without rights. CPRID has clear provenance (DNIT, access-to-information request) and CC BY 4.0. The split holds out whole highways (test RS_386, val DF_080 + DF_020), fixed before any training, because consecutive frames of one road are near duplicates.
+
+## D013 — Segmenter predicts three channels: pothole, crack, road
+CPRID provides all three masks. The road mask lets a later gate ignore blobs that are not on the carriageway; the crack channel gives the model a place to put "damage that is not a pothole", which matters for the trap set. Normalisation and sigmoid are inside the exported ONNX so the runtime does no model-specific arithmetic.
+
+## D014 — Offline training lives in a separate environment
+`.venv` is the runtime (OpenCV 5 + numpy only). `.venv-train` holds CPU PyTorch for training and export. Nothing under `vision/`, `agent/`, `api/` or `worker/` may import torch.
