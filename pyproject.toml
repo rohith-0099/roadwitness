@@ -1,0 +1,24 @@
+[project]
+name = "roadwitness"
+version = "0.1.0"
+description = "Turns a phone video into evidence that enforces a road's warranty. OpenCV 5 agentic vision."
+requires-python = ">=3.12,<3.13"
+license = "MIT"
+dependencies = [
+    "opencv-python-headless==5.0.0.93",
+    "numpy==2.5.4",
+]
+
+[project.optional-dependencies]
+dev = ["pytest==9.1.1"]
+
+[project.scripts]
+roadwitness = "cli:main"
+
+[tool.setuptools]
+packages = ["vision", "agent", "models"]
+py-modules = ["cli"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["models: needs model weights from models/download.py"]

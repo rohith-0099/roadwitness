@@ -5,20 +5,20 @@ If context resets: re-read `CLAUDE.md`, this file, and `DECISIONS.md`, then cont
 Last updated: 2026-10-12
 
 ## Current status
-Phase 0 (risk spikes) in progress. Local dev env up: Python 3.12.3, `opencv-python-headless==5.0.0.93` (latest 5.x on PyPI, checked 2026-10-12), x86_64 laptop, RTX 3050 4 GB.
+Phase 0 done except the two spikes that need things only you can provide (VLM: disk; ARM64/Fargate: emulation or AWS). Phase 2 started. Local dev env up: Python 3.12.3, `opencv-python-headless==5.0.0.93` (latest 5.x on PyPI, checked 2026-10-12), x86_64 laptop, RTX 3050 4 GB.
 
 ## Next step
-Spike 0.1b (ARM64 container under QEMU), spike 0.6 (COOL research), then `models/download.py` with pinned SHA-256, `docs/ATTRIBUTIONS.md`, and Phase 2 `vision/quality.py`. Results table lives in `docs/04_BUILD_PLAN.md`.
+Phase 2 slice A: `vision/quality.py` (done when tests pass) → `vision/privacy.py` → `vision/detect.py` → `vision/measure.py` → CLI. In parallel Phase 1: pick a license-clean public pothole segmentation dataset, write `eval/datasets.md` and `eval/SHOT_LIST.md`. Spike 0.4 (VLM) and 0.1b wait on ASK ME items.
 
 ## Phase checklist
 - [ ] **Phase 0 — Risk spikes**
   - [x] 0.1a OpenCV 5 installs and imports locally (x86_64): `cv2.__version__ == "5.0.0"`
-  - [ ] 0.1b OpenCV 5 in `python:3.12-slim` ARM64 container (QEMU locally; Fargate run needs AWS creds)
+  - [ ] 0.1b OpenCV 5 in `python:3.12-slim` ARM64 container: aarch64 wheel exists on PyPI; local run blocked (no QEMU binfmt), Fargate run needs AWS creds
   - [x] 0.2 Segmentation ONNX on new DNN engine (LRASPP chosen; DeepLabV3 wrong on new engine)
   - [x] 0.3 ALIKED + LightGlue + USAC homography (real pothole pair still pending captures)
   - [ ] 0.4 PaliGemma2 VLM via `cv2.dnn` (blocked on disk space, see ASK ME)
   - [x] 0.5 Privacy models (YuNet face, LPD-YuNet plate, PP-OCRv3 text)
-  - [ ] 0.6 COOL: listing, OpenCV version, cost
+  - [x] 0.6 COOL: researched (AMI, OpenCV 5.0 based, ~$0.01/h software on c8g.large); run pending AWS
 - [ ] Phase 1 — Data + detector
 - [ ] Phase 2 — Slice A: video → potholes on a map (local)
 - [ ] Phase 3 — Slice B: dedupe + re-identification
@@ -47,4 +47,5 @@ Spike 0.1b (ARM64 container under QEMU), spike 0.6 (COOL research), then `models
    - Docker build cache: 1.9 GB (`docker builder prune`)
    - `~/.cache/pip`: 1.4 GB (`pip cache purge`)
 2. **AWS**: account + credentials (`aws configure` or SSO), Bedrock model access, one SES verified sender address. No AWS resource has been created; a cost list will be added here before any is.
-3. **Real captures** (exact shot list will be written to `eval/SHOT_LIST.md`).
+3. **ARM64 emulation** (optional, lets me build and test the ARM64 image locally): `docker run --privileged --rm tonistiigi/binfmt --install arm64`. It registers QEMU with the host kernel, so I have not run it myself.
+4. **Real captures** (exact shot list will be written to `eval/SHOT_LIST.md`).
