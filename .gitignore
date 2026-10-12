@@ -1,0 +1,44 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+build/
+dist/
+
+# Models and weights are never committed (see models/ download scripts)
+models/weights/
+*.onnx
+*.pt
+*.pth
+*.safetensors
+*.tflite
+
+# Data: raw captures and datasets stay local
+data/
+eval/datasets/
+runs/
+*.mp4
+*.mov
+
+# Secrets
+.env
+.env.*
+!.env.example
+*.pem
+
+# Node / web
+node_modules/
+.next/
+out/
+
+# CDK
+cdk.out/
+cdk.context.json
+
+# Local state
+*.sqlite
+*.sqlite3
+.DS_Store
+.venv-train/
