@@ -5,10 +5,10 @@ If context resets: re-read `CLAUDE.md`, this file, and `DECISIONS.md`, then cont
 Last updated: 2026-10-12
 
 ## Current status
-Phase 0 done except the two spikes that need things only you can provide (VLM: disk; ARM64/Fargate: emulation or AWS). Phase 2 started. Local dev env up: Python 3.12.3, `opencv-python-headless==5.0.0.93` (latest 5.x on PyPI, checked 2026-10-12), x86_64 laptop, RTX 3050 4 GB.
+Phase 0 done except the two spikes that need things only you can provide (VLM: disk; ARM64/Fargate: emulation or AWS). Phase 2: quality gate and privacy blur done with tests (23 passing). Phase 1: dataset chosen (CPRID, CC BY 4.0), prepare and train scripts written but **not run yet**. Local dev env up: Python 3.12.3, `opencv-python-headless==5.0.0.93` (latest 5.x on PyPI, checked 2026-10-12), x86_64 laptop, RTX 3050 4 GB.
 
 ## Next step
-Phase 2 slice A: `vision/quality.py` (done when tests pass) → `vision/privacy.py` → `vision/detect.py` → `vision/measure.py` → CLI. In parallel Phase 1: pick a license-clean public pothole segmentation dataset, write `eval/datasets.md` and `eval/SHOT_LIST.md`. Spike 0.4 (VLM) and 0.1b wait on ASK ME items.
+**Waiting on your answer**: you stopped the first training run. Either (a) OK to train in `.venv-train` on this laptop's CPU (about 80 min in the background), or (b) training happens elsewhere. Then: run `python -m models.training.prepare_data`, `python -m models.training.train_seg`, parity-test the exported ONNX on `ENGINE_NEW`, write `vision/detect.py` and `vision/measure.py`, CLI.
 
 ## Phase checklist
 - [ ] **Phase 0 — Risk spikes**
@@ -20,7 +20,14 @@ Phase 2 slice A: `vision/quality.py` (done when tests pass) → `vision/privacy.
   - [x] 0.5 Privacy models (YuNet face, LPD-YuNet plate, PP-OCRv3 text)
   - [x] 0.6 COOL: researched (AMI, OpenCV 5.0 based, ~$0.01/h software on c8g.large); run pending AWS
 - [ ] Phase 1 — Data + detector
+  - [x] Public dataset chosen and license-checked (`eval/datasets.md`)
+  - [x] Shot list for local captures (`eval/SHOT_LIST.md`)
+  - [ ] Prepare + train + export (scripts written, not run)
+  - [ ] Model card, parity test, metrics on held-out highway
 - [ ] Phase 2 — Slice A: video → potholes on a map (local)
+  - [x] `vision/quality.py` + tests
+  - [x] `vision/privacy.py` + tests
+  - [ ] `vision/detect.py`, `vision/measure.py`, CLI
 - [ ] Phase 3 — Slice B: dedupe + re-identification
 - [ ] Phase 4 — Slice C: agent + policy gates + cases
 - [ ] Phase 5 — Slice D: repair verification
@@ -38,7 +45,7 @@ Phase 2 slice A: `vision/quality.py` (done when tests pass) → `vision/privacy.
 - OpenCV Zoo on Hugging Face has `opencv/license_plate_detection_yunet` (dedicated plate detector) and `opencv/face_detection_yunet`.
 
 ## Blockers
-- **Disk**: 4.1 GB free on `/` (98% full) after adding the offline export env (`.venv-train`, 0.9 GB). PaliGemma2 ONNX (several GB) and offline PyTorch training env will not fit.
+- **Disk**: 3.5 GB free on `/` (98% full) after the offline env (`.venv-train`, 0.9 GB) and CPRID (0.25 GB). PaliGemma2 ONNX (several GB) and offline PyTorch training env will not fit.
 - **No AWS access**: `aws` CLI not installed, no credentials. Phases 0.1b (Fargate run) and 6 wait on this.
 
 ## ASK ME
